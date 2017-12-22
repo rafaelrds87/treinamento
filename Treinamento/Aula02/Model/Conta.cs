@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aula02.Model
 {
-    public abstract class Conta
+    public abstract class Conta : IEquatable<Conta>
     {
         public int Agencia { get; set; }
 
@@ -15,27 +15,31 @@ namespace Aula02.Model
 
         public decimal Saldo { get; set; }
 
-        private List<Item> _extrato = new List<Item>();
+        protected List<Item> _extrato = new List<Item>();
 
-        public void Depositar(decimal valor)
+        public virtual void Depositar(decimal valor)
         {
             Saldo += valor;
             
             _extrato.Add(new Item()
             {
+                Tipo = TipoItem.Deposito,
                 Data = DateTime.Now,
-                Valor = valor
+                Valor = valor,
+                Saldo = this.Saldo
             });
         }
 
-        public void Sacar(decimal valor)
+        public virtual void Sacar(decimal valor)
         {
             Saldo -= valor;
 
             _extrato.Add(new Item()
             {
+                Tipo = TipoItem.Saque,
                 Data = DateTime.Now,
-                Valor = valor * -1
+                Valor = valor * -1,
+                Saldo = this.Saldo
             });
         }
 
@@ -44,6 +48,49 @@ namespace Aula02.Model
         public Item[] ObterExtrato()
         {
             return _extrato.ToArray();
+        }
+
+        public bool Equals(Conta x, Conta y)
+        {
+            return x.Numero == y.Numero && x.Agencia == y.Agencia;
+        }
+
+        public int GetHashCode(Conta obj)
+        {
+            return obj.GetHashCode();
+        }
+
+        public bool Equals(Conta other)
+        {
+            if (ReferenceEquals(null, other))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return Equals(_extrato, other._extrato) &&
+                   Agencia == other.Agencia &&
+                   Numero == other.Numero;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Conta) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_extrato != null ? _extrato.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ Agencia;
+                hashCode = (hashCode * 397) ^ Numero;
+                hashCode = (hashCode * 397) ^ Saldo.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

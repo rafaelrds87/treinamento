@@ -43,9 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\RepositorioBase.cs" />
     <Compile Include="Model\Conta.cs" />
     <Compile Include="Model\ContaCorrente.cs" />
     <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\TipoItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

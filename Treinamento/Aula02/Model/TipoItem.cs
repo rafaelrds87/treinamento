@@ -12,6 +12,8 @@ namespace Aula02.Model
 
         Deposito = 2,
 
-        Imposto = 3
+        Imposto = 3,
+
+        Juros = 4
     }
 }
